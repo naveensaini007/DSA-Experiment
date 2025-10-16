@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+// Stack for integers
+int stack[MAX];
+int top = -1;
+
+// Function prototypes
+void push(int element);
+int pop();
+void display();
+void checkPalindrome();
+void demonstrateOverflow();
+void demonstrateUnderflow();
+
+// Main function
+int main() {
+    int choice, element;
+
+    while (1) {
+        printf("\n=== STACK MENU ===\n");
+        printf("1. Push an Element onto Stack\n");
+        printf("2. Pop an Element from Stack\n");
+        printf("3. Check Palindrome using Stack\n");
+        printf("4. Demonstrate Overflow and Underflow\n");
+        printf("5. Display Stack\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter element to push: ");
+                scanf("%d", &element);
+                push(element);
+                break;
+            case 2:
+                element = pop();
+                if (element != -1)
+                    printf("Popped element: %d\n", element);
+                break;
+            case 3:
+                checkPalindrome();
+                break;
+            case 4:
+                demonstrateOverflow();
+                demonstrateUnderflow();
+                break;
+            case 5:
+                display();
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                return 0;
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+    }
+
+    return 0;
+}
+
+// Push operation
+void push(int element) {
+    if (top == MAX - 1) {
+        printf("Stack Overflow! Cannot push %d\n", element);
+    } else {
+        top++;
+        stack[top] = element;
+        printf("%d pushed onto stack.\n", element);
+    }
+}
+
+// Pop operation
+int pop() {
+    if (top == -1) {
+        printf("Stack Underflow! Stack is empty.\n");
+        return -1;
+    } else {
+        int popped = stack[top];
+        top--;
+        return popped;
+    }
+}
+
+// Display stack status
+void display() {
+    if (top == -1) {
+        printf("Stack is empty.\n");
+    } else {
+        printf("Stack elements: ");
+        for (int i = 0; i <= top; i++) {
+            printf("%d ", stack[i]);
+        }
+        printf("\nTop is at index %d\n", top);
+    }
+}
+
+// Check palindrome using stack (character stack used)
+void checkPalindrome() {
+    char str[100];
+    char tempStack[100];
+    int tempTop = -1;
+
+    printf("Enter a string to check for palindrome: ");
+    scanf("%s", str);
+
+    int len = strlen(str);
+
+    // Push all characters onto the temporary stack
+    for (int i = 0; i < len; i++) {
+        tempStack[++tempTop] = str[i];
+    }
+
+    // Pop and compare with original string
+    int isPalindrome = 1;
+    for (int i = 0; i < len; i++) {
+        if (str[i] != tempStack[tempTop--]) {
+            isPalindrome = 0;
+            break;
+        }
+    }
+
+    if (isPalindrome)
+        printf("'%s' is a palindrome.\n", str);
+    else
+        printf("'%s' is not a palindrome.\n", str);
+}
+
+// Simulate Overflow by setting top to MAX - 1 and pushing one more element
+void demonstrateOverflow() {
+    printf("Demonstrating Stack Overflow:\n");
+    top = MAX - 1;
+    push(999);  // This should trigger overflow
+}
+
+// Simulate Underflow by setting top to -1 and trying to pop
+void demonstrateUnderflow() {
+    printf("Demonstrating Stack Underflow:\n");
+    top = -1;
+    pop();  // This should trigger underflow
+}

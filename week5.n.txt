@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+// Structure for one day
+typedef struct {
+ char *dayName; // dynamically allocated string for day name
+ int date; // integer for date
+ char *activity; // dynamically allocated string for activity description
+} Day;
+int main() {
+ int i;
+ // Allocate memory for 7 days (week)
+ Day *calendar = (Day *)malloc(7 * sizeof(Day));
+ if (calendar == NULL) {
+ printf("Memory allocation failed!\n");
+ return 1;
+ }
+ // Predefined day names
+ const char *dayNames[7] = {
+ "Monday", "Tuesday", "Wednesday", "Thursday", 
+ "Friday", "Saturday", "Sunday"
+ };
+ // Fill calendar with sample data
+ for (i = 0; i < 7; i++) {
+ // Allocate memory and copy day name
+ calendar[i].dayName = (char *)malloc(strlen(dayNames[i]) + 1);
+ strcpy(calendar[i].dayName, dayNames[i]);
+ // Assign date (for demo: just i+1)
+ calendar[i].date = i + 1;
+ // Allocate memory for activity description
+ char tempActivity[50];
+ sprintf(tempActivity, "Activity planned for %s", dayNames[i]);
+ calendar[i].activity = (char *)malloc(strlen(tempActivity) + 1);
+ strcpy(calendar[i].activity, tempActivity);
+ }
+ // Display the calendar
+ printf("Weekly Calendar:\n");
+ for (i = 0; i < 7; i++) {
+ printf("%s (Date: %d): %s\n", calendar[i].dayName, calendar[i].date,
+calendar[i].activity);
+ }
+ // Free allocated memory
+ for (i = 0; i < 7; i++) {
+ free(calendar[i].dayName);
+ free(calendar[i].activity);
+ }
+ free(calendar);
+ return 0;
+}
+b) ) Write functions create (), read () and display (); to create the calendar, to 
+read the data from the keyboard and to print weeks’ activity details report on 
+screen.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+// Structure for one day
+typedef struct {
+ char *dayName; // dynamically allocated string for day name
+ int date; // integer for date
+ char *activity; // dynamically allocated string for activity description
+} Day;
+// Function prototypes
+Day* create();
+void read(Day *calendar, int size);
+void display(Day *calendar, int size);
+int main() {
+ int size = 7; // 7 days in a week
+ // Step 1: Create calendar
+ Day *calendar = create();
+ // Step 2: Read user input
+ read(calendar, size);
+ // Step 3: Display calendar
+ display(calendar, size);
+ // Free allocated memory
+ for (int i = 0; i < size; i++) {
+ free(calendar[i].dayName);
+ free(calendar[i].activity);
+ }
+ free(calendar);
+ return 0;
+}
+// Function to allocate memory for 7 days
+Day* create() {
+ Day *calendar = (Day*)malloc(7 * sizeof(Day));
+ if (calendar == NULL) {
+ printf("Memory allocation failed!\n");
+ exit(1);
+ }
+ return calendar;
+}
+// Function to read calendar data from user
+void read(Day *calendar, int size) {
+ char buffer[100];
+ printf("Enter details for %d days:\n", size);
+ for (int i = 0; i < size; i++) {
+ printf("\nDay %d:\n", i + 1);
+ // Read day name
+ printf("Enter Day Name: ");
+ scanf(" %[^\n]", buffer); // read full line
+ calendar[i].dayName = (char*)malloc(strlen(buffer) + 1);
+ strcpy(calendar[i].dayName, buffer);
+ // Read date
+ printf("Enter Date (integer): ");
+ scanf("%d", &calendar[i].date);
+ // Read activity
+ printf("Enter Activity: ");
+ scanf(" %[^\n]", buffer);
+ calendar[i].activity = (char*)malloc(strlen(buffer) + 1);
+ strcpy(calendar[i].activity, buffer);
+ }
+}
+// Function to display calendar
+void display(Day *calendar, int size) {
+ printf("\n===== Weekly Calendar Report =====\n");
+ for (int i = 0; i < size; i++) {
+ printf("%s (Date: %d): %s\n",
+ calendar[i].dayName,
+ calendar[i].date,
+ calendar[i].activity);
+ }
+}
